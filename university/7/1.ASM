@@ -22,17 +22,24 @@ get_mass:
     mov ah,09h
     mov dx, \n
     int 21h
+
     mov si,0
+    mov bx,array
     mov cx,10
 
-    mov dh, [Bx+Si]
+mov dh, [Bx+Si]
 print_mass:
     mov dl, [bx+si]
 
-    cmp dh, dl
-    jl get_max
-    backarray:
+    mov al, dl
+    mov ah, 0
+    div [num]
 
+    cmp ah, 0
+    jnz odd
+    ; cmp dh, dl
+    ; jg get_min
+    backarray:
 
     add dl, 30h
     mov ah, 2
@@ -51,19 +58,8 @@ print_mass:
     mov ah,09h
     mov dx, \n
     int 21h
-    mov dx,indextext
-    int 21h
 
-    mov dx, [i]
-    add dx, 30h
-    mov ah, 02h
-    int 21h
-
-
-    mov ah,09h
-    mov dx, \n
-    int 21h
-    mov dx,maxtext
+    mov dx,minvalue
     int 21h
 
     mov dl, ch
@@ -71,23 +67,23 @@ print_mass:
     mov ah, 02h
     int 21h
 
-    mov Ah,1
+    mov ah,1
     int 21h
 
 mov ax,4C00h
 int 21h
 
-
-
-get_max:
-    mov dh, [Bx+Si]
-    mov [i], Si
+odd:
+    ; mov dh, [Bx+Si]
+    cmp dh, dl
+    jg get_min
     jmp backarray
 
+get_min:
+    mov dh, [Bx+Si]
+    jmp backarray
 
+num db 2
 array db ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-maxtext db 'maxvalue $'
-indextext db 'index $'
-i dw ?
-max db ?
+minvalue db 'minvalue $'
 \n db 13,10, '$'
